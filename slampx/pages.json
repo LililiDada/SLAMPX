@@ -1,0 +1,215 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "SLAMP",
+				"navigationBarBackgroundColor":"#6390C3",
+				"navigationBarTextStyle":"white"
+			}
+			
+		}
+        ,{
+            "path" : "pages/switch/switch",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/record/record",
+            "style" : {
+				"navigationBarTitleText":"历史记录"
+			}
+        }
+        ,{
+            "path" : "pages/mode-list/mode-list",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/add-device/add-device",
+            "style" : {
+				"navigationBarTitleText":"添加设备",
+				"app-plus":{
+					"scrollIndicator":"none",//隐藏滚动条
+					 "bounce":"none",//关闭反弹效果
+					 "titleNView":{
+						 "backgroundColor":"#6390C3",
+						 "titleColor":"#FFFFFF",
+						 "titleText":"新增设备",
+						 //配置按钮
+						 "buttons":[
+							 // 左边
+							 {
+								 "color":"#FFFFFF",								 
+								 "colorPressed":"#BBBBBB",
+								 "float":"right",
+								 "fontSrc":"/static/font/iconfont.ttf",
+								 "text":"列表",
+								 "width":"50px"
+							 }
+						]
+					 }
+				}
+			}
+        }
+        ,{
+            "path" : "pages/regoin-manage/regoin-manage",
+            "style" : {
+				"navigationStyle":"custom",
+				"app-plus":{
+					"scrollIndicator":"none",//隐藏滚动条
+					 "bounce":"none",//关闭反弹效果
+					 "titleNView":{
+						 "backgroundColor":"#6390C3",
+						 "titleColor":"#FFFFFF",
+						 "titleText":"区域管理",
+						 //配置按钮
+						 "buttons":[
+							 // 右边
+							 {
+								"color":"#FFFFFF",								 
+								 "colorPressed":"#BBBBBB",
+								 "float":"right",
+								 "fontSize":"16px",
+								 "text":"确定",
+								 "width":"60px"
+							 }
+						]
+					 }
+				}
+			}
+        }
+        ,{
+            "path" : "pages/scene/scene",
+            "style" : {
+				"navigationStyle":"custom",
+				"app-plus":{
+					"scrollIndicator":"none",//隐藏滚动条
+					 "bounce":"none",//关闭反弹效果
+					 "titleNView":{
+						 "backgroundColor":"#6390C3",
+						 "titleColor":"#FFFFFF",
+						 "titleText":"节能模式管理",
+						 //配置按钮
+						 "buttons":[
+							 // 右边
+							 {
+								"color":"#FFFFFF",								 
+								 "colorPressed":"#BBBBBB",
+								 "float":"right",
+								 "fontSize":"16px",
+								 "text":"确定",
+								 "width":"60px"
+							 }
+						]
+					 }
+				}
+			}
+        }
+        ,{
+            "path" : "pages/device-list/device-list",
+            "style" : {
+				"navigationBarTitleText":"设备列表"
+			}
+        }
+        ,{
+            "path" : "pages/add-scene/add-scene",
+            "style" : {
+				"navigationBarTitleText":"添加节能模式"
+			}
+        }
+        ,{
+            "path" : "pages/region-list/region-list",
+            "style" : {
+				"navigationStyle":"custom",
+				"app-plus":{
+					"scrollIndicator":"none",//隐藏滚动条
+					 "bounce":"none",//关闭反弹效果
+					 "titleNView":{
+						 "backgroundColor":"#6390C3",
+						 "titleColor":"#FFFFFF",
+						 "titleText":"正常模式管理",
+						 //配置按钮
+						 "buttons":[
+							 // 右边
+							 {
+								"color":"#FFFFFF",								 
+								 "colorPressed":"#BBBBBB",
+								 "float":"right",
+								 "fontSize":"16px",
+								 "text":"确定",
+								 "width":"60px"
+							 }
+						]
+					 }
+				}
+			}
+        }
+        ,{
+            "path" : "pages/area/area",
+            "style" : {
+				"navigationBarTitleText": "区域管理"
+			}
+        }
+		,{
+		    "path" : "pages/map/map",
+		    "style" : {
+				
+			}
+		},
+		{
+		    "path" : "pages/repair/repair",
+		    "style" : {
+				"navigationBarTitleText": "维修管理"	
+			}
+		},
+		{
+		    "path" : "pages/history/history",
+		    "style" : {
+				"navigationBarTitleText": "数据统计",
+				"navigationBarBackgroundColor":"#6390C3",
+				"navigationBarTextStyle":"white"
+			}
+		},
+		{
+			"path":"pages/repair-record/repair-record",
+			"style" : {
+				"navigationBarBackgroundColor":"#FFFFFF",
+				"navigationBarTextStyle":"black"
+			}
+		}
+        
+        
+        ,{
+            "path" : "pages/data-display/data-display",
+            "style" : {}
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "SLAMP",
+		"navigationBarBackgroundColor": "#6390C3",
+		"backgroundColor": "#6390C3"
+	},
+	"tabBar": {
+	    "color": "#7A7E83",
+	    "selectedColor": "#3cc51f",
+	    "borderStyle": "black",
+	    "backgroundColor": "#ffffff",
+	    "list": [{
+	        "pagePath": "pages/map/map",
+	        "iconPath": "static/icon/map.png",
+	        "selectedIconPath": "static/icon/map-active.png"
+	    },{
+			"pagePath":"pages/history/history",
+			"iconPath": "static/icon/charts.png",
+			"selectedIconPath": "static/icon/charts-active.png"
+		},{
+			"pagePath":"pages/repair/repair",
+			"iconPath": "static/icon/device.png",
+			"selectedIconPath": "static/icon/device-active.png"
+		}, {
+	        "pagePath": "pages/switch/switch",
+	        "iconPath": "static/icon/switch.png",
+	        "selectedIconPath": "static/icon/switch-active.png"
+	    }]
+	}
+}

@@ -1,0 +1,288 @@
+<template>
+	<view>
+		<map  :style="[{width:windowWidth + 'px', height: mapHeight + 'px'}]"  :latitude="latitude" :longitude="longitude" :markers="markers" @markertap='showdetail' scale="18" show-location id="maps" class="maps">
+			<view class="add" @click="addDevice">
+				<image src="../../static/add.png" class="add-img"></image>
+			</view>
+		</map>
+		<view class="record" :style="[{width:windowWidth + 'px', height: parHeight + 'px'}]">
+			<view class="lamp_status">
+				<view :style="[{'margin-bottom': lampStatusList.length-1 == index?'':marginBottom}]" v-for="(item,index) in lampStatusList" :key='index'>
+					<lamp-status :item="item" :rWidth='rWidth'></lamp-status>
+				</view>
+			</view>
+			<view class="lamp_count" :style="[{width:countWidth+'px'}]">
+				<text class="lamp_count_name">路灯总数</text>
+				<text>{{deviceTotal}}</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	let _self;
+	import lampStatus from  "../../components/map/lamp-status.vue";
+	export default {
+		components:{
+			lampStatus,
+		},
+		data() {
+			return {
+				windowWidth:0,
+				mapHeight:0,
+				parHeight:0,
+				rWidth:0,
+				countWidth:0,
+				url:'https://slamp.dashanwai.cn/api',
+				marginBottom:'25rpx',
+				lampStatusList:[{
+					id:1,
+					activeColor:'#009f3c',
+					width:uni.upx2px(150),
+					borderRadius:20,
+					handleColor:"transparent",
+					status:"正常路灯",
+					percent:'15%',
+					number:15
+				},{
+					id:2,
+					activeColor:'#f4ea2a',
+					width:uni.upx2px(150),
+					borderRadius:20,
+					handleColor:"transparent",
+					status:"关闭路灯",
+					percent:'15%',
+					number:15
+				},{
+					id:3,
+					activeColor:'#d81e06',
+					width:uni.upx2px(150),
+					borderRadius:20,
+					handleColor:"transparent",
+					status:"故障路灯",
+					percent:'15%',
+					number:15
+				}],
+				latitude:24.77327253,
+				longitude: 113.67080133,
+				noraml:{
+					content:'',//文本
+					color:'#ffffff',//文字颜色
+					fontSize:14,//文本大小
+					borderRadius: 4,
+					borderWidth: 1,
+					borderColor: '#36b599',
+					bgColor:'#36b599',//背景颜色
+					display:'ALWAYS',//常显
+					padding:2
+				},
+				normalImg:'../../static/normal.png',
+				abnormalImg:'../../static/abnormal.png',
+				abnormal:{
+					content:'',
+					color:'#ffffff',//文字颜色
+			 　　   fontSize:14,//文本大小
+			 　　   borderRadius:2,//边框圆角
+				    borderColor:'#ff7442',
+			　　    bgColor:'#ff7442',//背景颜色
+			 　　   display:'ALWAYS',//常显
+					padding:2
+				},
+				markers: [
+					{
+						"id": 3,
+						"title":'123',
+						"latitude": 24.766771,
+						"longitude": 113.657915,
+						"width": 40,
+						"height": 40,
+						"iconPath": "../../static/normal.png"
+					}
+					
+				],
+				
+			}
+		},
+		methods: {
+			showdetail(e){
+				console.log(e)
+				uni.navigateTo({
+					url: '/pages/record/record?des_id=' +  e .detail. markerId
+				});
+				
+			},
+			// 添加设备
+			addDevice(){
+				uni.navigateTo({
+				    url: '/pages/add-device/add-device'
+				});
+			},
+			
+			percentage(num, total) {
+			    if (num == 0 || total == 0){
+			        return 0;
+			    }
+			    return (Math.round(num / total * 1000) / 10.00);// 小数点后一位百分比
+			},
+			// 封装请求
+			async request(url){
+				return new Promise((resolve,reject)=>{
+					uni.request({
+						url:_self.url+url,
+						header:{
+							'content-type':'application/json;charset=UTF-8',
+							'token':uni.getStorageSync('token')
+						},
+						data:{},
+						method:"GET",
+						dataType:"json",
+						success(res) {
+							resolve(res);
+						},
+						fail(e) {
+							reject(e);
+						}
+					})
+				})
+				
+			}
+		},
+		async onShow() {
+			_self = this;
+			uni.showLoading({title: '加载中'});
+			uni.getSystemInfo({
+				success: function (res) {
+					_self.windowWidth = res.windowWidth
+					_self.mapHeight =  res.windowHeight * 0.7;
+					_self.parHeight =  res.windowHeight * 0.3;
+					_self.rWidth   =  res.windowWidth * 0.4;
+					_self.countWidth   =  res.windowWidth * 0.25;
+					
+				}
+			});
+			_self.request('/device').then(res=>{
+				let data = res.data.data;
+				var total = data.faultCount + data.runCount;
+				_self.deviceTotal = total;
+				var marker = [];
+				
+				console.log(data)
+				
+				// 权限之分
+				if(!uni.getStorageSync('admin')){
+					console.log('普通账号')
+					if(!data.list.length){
+						console.log('没有数据')
+						uni.getLocation({
+						    type: 'wgs84',
+						    success: function (res) {
+						        _self.longitude = res.longitude;
+						        _self.latitude = res.latitude;
+						    }
+						});
+					}else{
+						_self.$nextTick(()=>{
+							_self.latitude=data.list[0].latitude;
+							_self.longitude=data.list[0].longitude;
+						})
+						console.log(_self.latitude,data.list[0].latitude)
+					}
+				}
+				
+				data.list.forEach(function(item,index){
+					let data = {
+						id:Number(item.id),
+						latitude: item.latitude,
+						longitude:  item.longitude,
+						width:40,
+						height:40,
+					}
+						
+					if(item.status){
+						data.iconPath = _self.normalImg;
+						marker.push(data);
+						return;
+					}
+					data.iconPath = _self.abnormalImg;
+					marker.push(data);
+				})
+				_self.$nextTick(()=>{
+					_self.markers = marker
+				})
+				console.log(res)
+				_self.lampStatusList.forEach((item,index)=>{
+					switch(item.id){
+						case 1:
+						    var percent = _self.percentage(data.runCount,total);
+							var width = 150*percent/100;
+							_self.$set(_self.lampStatusList[index],'number', data.runCount);
+							_self.$set(_self.lampStatusList[index],'percent', percent);
+							_self.$set(_self.lampStatusList[index],'width', uni.upx2px(width));
+						break;
+						case 2:
+							var percent = _self.percentage(data.onlineCount,total);
+							var width = 150*percent/100;
+							_self.$set(_self.lampStatusList[index],'number', data.onlineCount);
+							_self.$set(_self.lampStatusList[index],'percent', percent);
+							_self.$set(_self.lampStatusList[index],'width', uni.upx2px(width));
+						break;
+						case 3:
+							var percent = _self.percentage(data.faultCount,total);
+							var width = 150*percent/100;
+							_self.$set(_self.lampStatusList[index],'number', data.faultCount);
+							_self.$set(_self.lampStatusList[index],'percent', percent);
+							_self.$set(_self.lampStatusList[index],'width', uni.upx2px(width));
+						break;
+					}
+				})
+			});
+			
+			uni.hideLoading();
+		},
+				
+	
+	}
+</script>
+<style>
+	.record{
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-around;
+	}
+	.lamp_count{
+		width: 200rpx;
+		height: 155rpx;
+		background-color: #FFFFFF;
+		box-shadow: 0 0 2px 2px rgba(153, 153, 153, 0.1);
+		border-radius: 10rpx;
+		justify-content: center;
+		align-items: center;
+	}
+	.lamp_count_name{
+		padding-bottom: 20rpx;
+		font-size: 27rpx;
+	}
+	.maps{
+		align-items: center;
+	}
+	.add{
+		width: 90rpx;
+		height: 90rpx;
+		border-radius: 50%;
+		background-color: #FFFFFF;
+		justify-content: center;
+		align-items: center;
+		box-shadow: 0 0 2px 2px rgba(238, 238, 238, 1);
+		position: absolute;
+		/* margin:auto; */
+		bottom: 20rpx;
+	}
+	.add-icon{
+		font-size: 50rpx;
+	}
+	.add-img{
+		width: 40rpx;
+		height: 40rpx;
+	}
+	
+</style>

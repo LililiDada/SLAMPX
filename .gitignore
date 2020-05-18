@@ -1,0 +1,9 @@
+/service/.idea
+/service/.vscode
+/service/vendor
+/service/*.log
+/service/thinkphp
+/service/.env
+/service/.DS_Store
+/slampx/.idea
+/slampx/unpackage
